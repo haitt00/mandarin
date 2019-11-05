@@ -24,7 +24,7 @@ class Board:
 	def diem(self): # so dan quy doi of 2 players
 		return [x + 5 * y for x, y in zip(self.diemdan, self.diemquan)] # dan quy doi = dan + quan * 5
 	def score(self): #so diem (tinh ca vay) of 2 players
-		return [self.diem[i] - self.vay[i] * 5 + self.vay[(i+1)%2] * 5] # diem = dan - đi vay * 5 + cho vay * 5 
+		return [self.diem[i] - self.vay[i] * 5 + self.vay[(i+1)%2] * 5] # diem = dan - di vay * 5 + cho vay * 5 
 	def __repr__(self): #show state of board & players
 		layout = '--------------'+ str(self.move_num) + '---------------\n'	
 		layout += 'P1: ' + str(self.diem[1]) + '      4 <-- 0   \n       |'
@@ -91,9 +91,9 @@ class Board:
 				self.dan[i + player * 6] = 1
 			self.vay[player] += 1
 	def hetquantanquancheck(self): #kiem tra "het quan, tan quan" 
-		if self.quan[5] > 0 or self.quan[11] > 0 or self.dan[5] and self.quan[5]==0:
-			return 1
-		return 0
+		if self.quan[5] > 0 or self.quan[11] > 0 or self.dan[5] > 0 and self.quan[5] > 0:
+			return 0
+		return 1
 	def hetquantanquan(self): #thuc hien het quan, tan quan, chia dan cho  2 ben
 			print('Het quan tan quan')
 			for i in range(5):
@@ -104,6 +104,9 @@ class Board:
 			print(self)
 
 	def move(self, player, slot, direction): #mot luot choi, nhan tham so: o bat dau (0->5), huong di(+1, -1)
+											 #move tra ve trang thai tro choi da ket thuc sau luot choi chua: 0~tiep tuc 1~ket thuc -1~move khong hop le
+		if (self.empty(slot)):
+			return -1
 		print('player: {}, slot {}, direction {}'.format(player,slot,direction))
 		slot = slot + player * 6
 		slot = self.distribute(slot, direction)      # rai het soi tu 1 o
@@ -115,11 +118,15 @@ class Board:
 			self.capture(slot, player)               # an soi tu 1 o
 			if self.hetquantanquancheck():           #sau moi luot an, kiem tra het quan tan quan
 				self.hetquantanquan()
-				return 
+				return 1
 		self.move_num += 1
 		if self.emptysidecheck((player+1)%2):        #truoc khi ket thuc luot, kiem tra opponent co het soi ca 5 slots khong
 			self.emptyside((player+1)%2)
 		print(self)
+		return 0
+class Player:
+
+def game()
 
 game = Board()
 print(game)
